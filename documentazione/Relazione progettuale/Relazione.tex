@@ -1,0 +1,221 @@
+\documentclass[a4paper]{extarticle}
+\usepackage[utf8]{inputenc}
+\usepackage{hyperref}
+\usepackage{geometry}
+\usepackage{fancyhdr}
+\usepackage{graphicx} % libreria per le immagini
+\usepackage{amssymb} %libreria per i simboli (ex. alfabeto reco)
+\usepackage{algorithm2e} %libreria per scrivere pseudocodice
+\usepackage{longtable}
+\usepackage{caption}
+\usepackage{lastpage}
+\usepackage{tabularx}
+
+\setlength{\parindent}{0em}%indentazione paragrafo
+\setlength{\parskip}{1em}%spazio tra paragrafi
+\renewcommand{\baselinestretch}{1.3}%interlinea
+\graphicspath{ {./} }
+\geometry{
+    a4paper,
+    left=10mm,
+    right=10mm,
+    bottom=20mm
+}
+
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=blue,      
+    urlcolor=blue,
+    pdftitle={Overleaf Example},
+    pdfpagemode=FullScreen
+}
+
+\pagestyle{fancy}
+\fancyhf{}
+\rhead{Federico Calò}
+\lhead{Ingegneria della Conoscenza - Relazione progettuale}
+\cfoot{  \thepage }
+
+
+\title{Ingegneria della Conoscenza - Relazione progettuale}
+\author{\href{http://www.federicocalo.dev}{Federico Calò} }
+\date{}
+
+\begin{document}
+\maketitle
+\newpage
+\tableofcontents
+\voffset -30pt
+
+\newpage
+
+\section{Prefazione}
+
+La stesura di questo documento è volta ad analizzare il progetto in Python sviluppato da \href{http://www.federicocalo.dev}{Federico Calò}, matricola 678191, per l'esame di Ingegneria della Conoscenza. Seguirà una breve introduzione del progetto, seguita dalle librerie utilizzate e dagli algoritmi scelti per la sua realizzazione.
+
+\newpage
+
+\section{Introduzione}
+
+Questo progetto, dal nome di HR Analysis, nasce con l'intenzione di creare un programma per la gestione del personale di un'azienda informatica e 
+dei relativi progetti. L'utente finale sarà una persona qualificata nella ricerca del personale, la quale dovrà interrogare 
+la base dati per poter visualizzare i progetti attivi e il personale assunto. 
+
+Tramite il sistema potrà quindi stabilire se:
+\begin{itemize}
+	\item Vi è un esubero di personale, ovvero se ci sono molte più persone rispetto ai progetti attivi
+	\item Se vi è la necessità di assumere personale da impiegare in vari progetti
+	\item Se vi è una situazione normale, ovvero in cui tutto il personale è impiegato nei vari progetti
+\end{itemize}
+
+Inoltre vi è la possibilità di interrogare il sistema in merito:
+\begin{itemize}
+	\item Alle competenze del singolo lavoratore
+	\item Le relazioni tra i vari lavoratori
+	\item Verificare se un determinato soggetto ha bisogno di formazione per migliorare alcune skill
+	\item Verificare se un progetto può essere preso in carico in base alle persone presenti ed eventualmente avviare un percorso 
+		  di assunzione
+	\item Collocare in un progetto le persone appena assunte
+\end{itemize}
+
+Inoltre il sistema elabora le informazioni relative alle caratteristiche individuali e ai livelli di senority (anzianità) di ogni singolo dipendente già assunto e in base a queste determina automaticamente il livello di una persona assunta.
+
+Per ogni soggetto vengono presi in considerazione le seguenti caratteristiche:
+\begin{itemize}
+	\item Hard skills, individuate come le competenze tecniche di cui necessita per lavorare
+	\item Work Routine, individuate come tutte le competenze trasversali
+	\item Innovation, ovvero la capacità di saper migliorare le proprie competenze e apprenderne delle nuove
+	\item Coordination, la capacità di coordinare piccoli gruppi di persone
+\end{itemize}
+
+Queste caratteristiche vengono espresse con dei valori numerici da 1 a 5, dove ogni numero rappresenta una certa padronanza in quella determinata caratteristica.
+
+Per le \textbf{hard skills} potremmo avere le seguenti valutazioni:
+
+\begin{tabularx}{\textwidth} { 
+  | >{\centering\arraybackslash}X 
+  | >{\centering\arraybackslash}X 
+  | >{\centering\arraybackslash}X | }
+ \hline
+ Valore & Livello & Descrizione \\
+ \hline
+ 1  & Principiante  & Competenze di base relative al proprio lavoro.  \\
+ \hline
+ 2  & Familiare  & Competenze adeguate per agire in modo autonomo  \\
+ \hline
+ 3  & Competente  & Competenze avanzate in uno o più contesti produttivi  \\
+ \hline
+ 4  & Esperto  & Competenze di alto livello  \\
+ \hline
+ 5  & Master  & È il referente dell'argomento.  \\
+\hline
+\end{tabularx}
+
+Per la \textbf{Work Routine} potremmo avere le seguenti valutazioni:
+
+\begin{tabularx}{\textwidth} { 
+  | >{\centering\arraybackslash}X 
+  | >{\centering\arraybackslash}X 
+  | >{\centering\arraybackslash}X | }
+ \hline
+ Valore & Livello & Descrizione \\
+ \hline
+ 1  & Segue  & Eseguire attività di routine sulla base di istruzioni fornite da altri.  \\
+ \hline
+ 2  & Applica  & Esegue compiti non di routine di media complessità  \\
+ \hline
+ 3  & Capace  & Esegue compiti diversi, diversi in termini di complessità e in diversi contesti.  \\
+ \hline
+ 4  & Sicuro  & Esegue attività complesse all'interno di ambienti imprevedibili  \\
+ \hline
+ 5  & Influente  & Lavora in ambienti complessi e imprevedibili contribuendo alla definizione di linee guida per risolvere o
+anticipare i problemi  \\
+\hline
+\end{tabularx}
+
+Le valutazioni relative all'\textbf{Innovation} sono:
+
+
+\begin{tabularx}{\textwidth} { 
+  | >{\centering\arraybackslash}X 
+  | >{\centering\arraybackslash}X 
+  | >{\centering\arraybackslash}X | }
+ \hline
+ Valore & Livello & Descrizione \\
+ \hline
+ 1  & Conprensione  & Osserva le innovazioni introdotte da altri, le comprende e ne può percepire i vantaggi o
+svantaggi.  \\
+ \hline
+ 2  & Applica  & Osserva e giudica l'innovazione introdotta da altri, applicandola efficacemente al proprio contesto operativo  \\
+ \hline
+ 3  & Condivide  & Osserva e giudica l'innovazione introdotta da altri, applicandola efficacemente al proprio contesto operativo,
+promuovendo l'adozione all'interno del team.  \\
+ \hline
+ 4  & Promuove  & Promuove e suggerisce l'innovazione anche condividendo i risultati con i team e l'azienda  \\
+ \hline
+ 5  & Ispira  & Ispira le persone a introdurre l'innovazione, influenza l'adozione e promuove le innovazioni a tutti i livelli.  \\
+\hline
+\end{tabularx}
+
+Infine per quanto riguarda la \textbf{Coordination} sono:
+
+\begin{tabularx}{\textwidth} { 
+  | >{\centering\arraybackslash}X 
+  | >{\centering\arraybackslash}X 
+  | >{\centering\arraybackslash}X | }
+ \hline
+ Valore & Livello & Descrizione \\
+ \hline
+ 1  & Da solo  & Riceve istruzioni, non ha persone da coordinare.  \\
+ \hline
+ 2  & Team interno  & Si occupa di coordinare 1/2 stagisti da coinvolgere all'interno di un percorso di formazione sul lavoro.  \\
+ \hline
+ 3  & Piccolo team  & Si concentra sul coordinamento di 1/3 junior che lo riconoscono come referente.  \\
+ \hline
+ 4  & Team  & Si occupa di coordinare 3/5 persone con diversa anzianità, il coordinamento e la gestione
+le abilità sono ben formate e di alto livello  \\
+ \hline
+ 5  & Grande Team  & Sa gestire e coordinare persone diverse, diverse per anzianità, competenze, background.
+Coordina più piccoli team (3/5) o un team più grande (6/12) \\
+\hline
+\end{tabularx}
+
+
+Per navigare il sistema si pensa di utilizzare un'interfaccia grafica, mentre i dati verranno storicizzati in un database 
+relazionale. I dati verranno caricati in memoria attraverso una struttura dati chiamata grafo. Ogni nodo del grafo sarà 
+costituito da un dipendente e le relazioni tra i dipendenti saranno rappresentate dagli archi tra i nodi. Non ci saranno 
+nodi isolati in quanto ogni dipendente avrà un responsabile e farà parte di un team di sviluppo o di una classe di formazione. 
+
+Ogni progetto, per essere preso in carico, dovrà rispettare le seguenti caratteristiche:
+
+\begin{itemize}
+	\item Deve essere disponibile un Product Manager per la gestione complessiva del progetto
+	\item Deve essere presente un analista funzionale, il cui compito è quello di formalizzare le richieste del cliente
+	\item Deve essere presente un UX designer per la gestione delle interfacce grafiche
+	\item Un gruppo di sviluppatori composto da
+	\begin{itemize}
+		\item 2 sviluppatori senior
+		\item 2 sviluppatori middle
+		\item 2 sviluppatori junior
+	\end{itemize}
+\end{itemize}
+
+
+Un Product Manager può curare gli aspetti relativi di due progetti contemporaneamente, mentre tutti le altre figure possono 
+partecipare allo sviluppo di un solo progetto.
+Se non sono rispettate queste caratteristiche l'HR può riservarsi di inserire il progetto in uno stato di pending della 
+durata di due settimane, al fine di poter assumere le figure professionali coinvolte.
+
+
+\section{Librerire utilizzate}
+
+\href{Vender}{https://github.com/cjhutto/vaderSentiment}
+
+
+ 
+\end{document}
+
+
+
